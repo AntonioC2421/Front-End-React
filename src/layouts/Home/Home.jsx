@@ -55,7 +55,6 @@ const Home = () => {
                     </dl>
                 </p>
             </div>
-            
         </div>
     )
 }
