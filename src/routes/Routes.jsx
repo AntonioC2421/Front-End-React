@@ -5,6 +5,7 @@ import Alumnos from "../components/Alumnos/alumnos";
 import Matriculas from "../components/Matriculas/matriculas";
 import Cursos from "../components/Cursos/cursos";
 import Home from "../layouts/Home/Home";
+import DataDetail from "../components/DetailRegister/DetailRegister";
 
 export const Router = () => {
     return (
@@ -14,6 +15,7 @@ export const Router = () => {
             <Route path="/alumnos" element={<Alumnos />} />
             <Route path="/matriculas" element={<Matriculas />} />
             <Route path="/cursos" element={<Cursos />} />
+            <Route path="/detail/:categoria/:id" element={<DataDetail/>}/>
         </Routes>
     );
 };
