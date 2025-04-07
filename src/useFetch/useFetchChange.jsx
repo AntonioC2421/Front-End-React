@@ -26,7 +26,7 @@ export function useFetchChange() {
             }
 
             const result = await response.json();
-            onSuccess(result); // Llamamos a la función para actualizar el estado
+            onSuccess(result, { message: "Exito" }); // Llamamos a la función para actualizar el estado
         } catch (err) {
             setError(err.message);
         } finally {

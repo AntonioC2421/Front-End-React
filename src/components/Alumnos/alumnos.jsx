@@ -1,15 +1,10 @@
-/*
-mejoras:
-1) Mostrar mensajes de exito o error visible para el cliente
-2) mensajes de inputs vacios
-*/
-
 import React, { useEffect, useState } from "react";
 import { useFecth } from "../../useFetch/useFetch";
 import { DeleteRegister } from "../../useFetch/useFetchDelete";
 import { useFetchChange } from "../../useFetch/useFetchChange";
 import { FetchAdd } from "../../useFetch/useFetchAdd";
 import { useNavigate } from 'react-router-dom';
+import { ValidateData } from "../../utils/ValidateData";
 
 const Alumnos = () => {
     //El proceso de la peticion desde useFecth.jsx
@@ -18,7 +13,7 @@ const Alumnos = () => {
     //error: el error que se produce
     //handleCancelRequest: para cancelar la pedicion 
     const { data, loading, error, handleCancelRequest } = useFecth("http://localhost:5000/api/escuela/alumnos");
-
+    const categoria = "alumnos";
     const [alumnos, setAlumnos] = useState([]); //todos los valores de alumnos
 
     const [editId, setEditId] = useState(null); //Activar/desactivar el modo editor
@@ -29,7 +24,9 @@ const Alumnos = () => {
 
     const [createAlumno, setcreateAlumno] = useState(false); //Modo ADD
     const [createData, setcreateData] = useState({}); //Los datos que se van a crear
+    const [message, setMessage] = useState(""); // Estado para el mensaje
 
+    const [errorMessage, setErrorMessage] = useState("");
     //cada vez que se cambie los datos, se actualice todos los valores
     useEffect(() => {
         if (data) {
@@ -43,18 +40,30 @@ const Alumnos = () => {
     };
 
     const handleFetchAdd = () => {
-        const url = `http://localhost:5000/api/escuela/alumnos/add`;
+        const { messageError, data, success } = ValidateData(createData, categoria);
         
-        FetchAdd(url, createData, (newAlumno) => {
-            if (newAlumno && newAlumno.id) {
+        if (success) {
+            const url = `http://localhost:5000/api/escuela/alumnos/add`;
+            FetchAdd(url, data, (newAlumno) => {
+
                 setAlumnos((prevAlumnos) => [...prevAlumnos, newAlumno]);  // Agregar los nuevos datos para mostrarlos
                 setcreateAlumno(false);  // Salir del modo ADD
                 setcreateData({});  // Resetear los datos en los inputs
-            }
-        });
+                setMessage("Alumno guardado exitosamente"); // Mostrar mensaje de éxito
+
+                setTimeout(() => {
+                    setMessage("");
+                }, 1500);
+
+            });
+        } else {
+            setErrorMessage(messageError);
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 3000);
+        }
     };
 
-    
     //DELETE
     const DataDelete = (id) => {
         // Mostrar confirmación antes de eliminar
@@ -64,6 +73,16 @@ const Alumnos = () => {
 
             DeleteRegister(url, () => {
                 setAlumnos((prevAlumnos) => prevAlumnos.filter(alum => alum.id !== id)); //filtar para no volver a mostar el id eliminado
+                setMessage("Alumno eliminado exitosamente");
+
+                setTimeout(() => {
+                    setMessage("");
+                }, 1500);
+            }, (error) => {
+                setErrorMessage("Error en eliminación");
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 1500);
             });
         }
     };
@@ -72,7 +91,7 @@ const Alumnos = () => {
     const DataChange = (id) => {
         setEditId(id);
         const alumnoSeleccionado = alumnos.find(alum => alum.id === id); //obtener los datos del id seleccionado
-        setEditedData({ ...alumnoSeleccionado }); // Cargar datos en el estado
+        setEditedData({ ...alumnoSeleccionado });
     };
 
     const handleInputChange = (e, field) => { //obtiene el valor del imput
@@ -80,21 +99,57 @@ const Alumnos = () => {
     };
 
     const saveChanges = () => { //guardar los cambios
+
+        // Campos a validar
+        const requiredFields = ['name', 'last_name', 'email'];
+
+        // Comprobar si alguno de los campos está vacío o contiene solo espacios
+        const isEmpty = requiredFields.some(field => !editedData[field] || editedData[field].trim() === "");
+
+        if (isEmpty) {
+            setErrorMessage("Por favor, rellene todos los campos.");
+
+            setTimeout(() => {
+                setErrorMessage(""); // Ocultar mensaje después de 1.5 segundos
+            }, 1500);
+            return; // No continuar con la actualización
+        }
+
         const url = `http://localhost:5000/api/escuela/alumnos/update/${editId}`;
 
-        updateData(url, editedData, (updatedAlumno) => {
-            if (!updatedAlumno || !updatedAlumno.id) {
-                console.error("Error: El servidor no devolvió el alumno actualizado correctamente.");
-                return;
-            }
+        
+        const { messageError, data, success } = ValidateData(editedData, categoria);
 
-            setAlumnos((prevAlumnos) =>
-                prevAlumnos.map((alumno) =>
-                    alumno.id === editId ? { ...alumno, ...updatedAlumno } : alumno
-                )
-            );
-            setEditId(null);
-        });
+        if (success) {
+            updateData(url, data, (updatedAlumno) => {
+                if (!updatedAlumno || !updatedAlumno.id) {
+                    console.error("Error: El servidor no devolvió el alumno actualizado correctamente.");
+                    return;
+                }
+    
+                setAlumnos((prevAlumnos) =>
+                    prevAlumnos.map((alumno) =>
+                        alumno.id === editId ? { ...alumno, ...updatedAlumno } : alumno
+                    )
+                );
+
+                setEditId(null);
+                setMessage("Alumno editado exitosamente");
+    
+                setTimeout(() => {
+                    setMessage("");
+                }, 1500);
+    
+            });
+
+        }else {
+            setErrorMessage(messageError);
+
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 3000);
+        }
+
     };
 
     //Read 
@@ -108,7 +163,7 @@ const Alumnos = () => {
                 <h2 className="titleTable">Lista de Alumnos</h2>
                 <div className="ButtonGroup">
                     <button className="btn btn-danger" onClick={handleCancelRequest} aria-label="Cancelar petición">
-                        ✖ Cancelar
+                        ✖ Cancelar Solicitud API
                     </button>
                     <button className="btn btn-success" onClick={ModeAdd} aria-label="Cancelar petición">
                         + Agregar registro
@@ -167,7 +222,7 @@ const Alumnos = () => {
                                         {editId === alumno.id ? (
                                             <input
                                                 className="form-control"
-                                                type="text"
+                                                type="email"
                                                 value={editedData.email || ""}
                                                 onChange={(e) => handleInputChange(e, "email")}
                                             />
@@ -191,24 +246,24 @@ const Alumnos = () => {
                                     ) : (
                                         <>
                                             <td>
-                                                <button onClick={() => DataChange(alumno.id)} className="btn btn-warning btn-sm">
+                                                <button onClick={() => DataChange(alumno.id)} className="btn btn-warning btn-md">
                                                     <i className="bi bi-pencil"></i>
                                                 </button>
                                             </td>
                                             <td>
-                                                <button onClick={() => DataDelete(alumno.id)} className="btn btn-danger btn-sm">
+                                                <button onClick={() => DataDelete(alumno.id)} className="btn btn-danger btn-md">
                                                     <i className="bi bi-trash3"></i>
                                                 </button>
                                             </td>
                                             <td>
-                                                <button onClick={() => Detail("alumno", alumno.id)} className="btn btn-info btn-sm" ><i className="bi bi-card-heading"></i></button>
+                                                <button onClick={() => Detail("alumno", alumno.id)} className="btn btn-info btn-md" ><i className="bi bi-card-heading"></i></button>
                                             </td>
                                         </>
                                     )}
                                 </tr>
 
                             ))}
-                            
+
                             {createAlumno && (
                                 <tr>
                                     <td>
@@ -264,6 +319,18 @@ const Alumnos = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+            )}
+            {/* Mensajes de éxito o error */}
+            {message && (
+                <div className="alert alert-info d-flex">
+                    <i className="bi bi-check2-circle px-2"></i>{message}
+                </div>
+            )}
+            {errorMessage && (
+                <div className="alert alert-danger d-flex">
+                    <i className="bi bi-dash-circle px-2"></i>
+                    {errorMessage}
                 </div>
             )}
             {

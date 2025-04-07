@@ -3,7 +3,6 @@ MEJORAS:
 1) mostrar mensaje cuando los inputs esten vacios
 2) Validar el tipo de valor que se envia
 3) Si no se guarda, mandar mensaje de erro visible para el cliente
-4) Mandar mensaje de exito visible para el cliente
 */
 
 export function FetchAdd(url, data, onSuccess) {
@@ -17,7 +16,7 @@ export function FetchAdd(url, data, onSuccess) {
         .then(response => response.json())
         .then(newData => {
             if (onSuccess) {
-                onSuccess(newData);
+                onSuccess(newData, { message: "Exito" });
             }
         })
         .catch(error => {

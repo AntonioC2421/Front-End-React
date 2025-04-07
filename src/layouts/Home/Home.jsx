@@ -2,7 +2,6 @@ import React from "react";
 import "./Home.css";
 import newperfil from "../../assets/imagenes/perfilimg.webp";
 
-
 const Home = () => {
     return (
         <div className="Home row">

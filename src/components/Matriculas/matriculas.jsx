@@ -40,8 +40,8 @@ const Matriculas = () => {
                         <thead className="table-dark">
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">ID Profesor</th>
-                                <th scope="col">ID Alumno</th>
+                                <th scope="col">Curso</th>
+                                <th scope="col">Alumno</th>
                                 <th scope="col">Editar</th>
                                 <th scope="col">Eliminar</th>
                                 <th scope="col">Detalle</th>
