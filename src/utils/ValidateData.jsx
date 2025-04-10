@@ -69,6 +69,15 @@ export function ValidateData(data, categoria) {
                     messageError: messageError,
                 };
             }
+        case "profesores":
+            if (IdValid && NameValid && LastNameValid ) {
+                return { success: true, data };
+            } else {
+                return {
+                    success: false,
+                    messageError: messageError,
+                };
+            }
         default:
             return { success: false, messageError: "Categoría no existe" };
     }
