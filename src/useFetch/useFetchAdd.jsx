@@ -5,7 +5,7 @@ MEJORAS:
 3) Si no se guarda, mandar mensaje de erro visible para el cliente
 */
 
-export function FetchAdd(url, data, onSuccess) {
+export function FetchAdd(url, data, onSuccess, onError) {
     fetch(url, {
         method: "POST",
         headers: {
@@ -13,13 +13,18 @@ export function FetchAdd(url, data, onSuccess) {
         },
         body: JSON.stringify(data),
     })
-        .then(response => response.json())
-        .then(newData => {
-            if (onSuccess) {
-                onSuccess(newData, { message: "Exito" });
+        .then(async (response) => {
+            const result = await response.json();
+
+            if (response.ok) {
+                if (onSuccess) onSuccess(result);
+            } else {
+                if (onError) onError(result.message || "Error desconocido del servidor.");
             }
         })
         .catch(error => {
-            console.error("Error al registar datos:", error);
+            console.error("Error al registrar datos:", error);
+            if (onError) onError("Error de red o el servidor no está disponible.");
         });
-};
+}
+

@@ -28,7 +28,7 @@ const Alumnos = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   //cada vez que se cambie los datos, se actualice todos los valores
-  
+
   useEffect(() => {
     if (data) {
       setAlumnos(data)
@@ -166,7 +166,7 @@ const Alumnos = () => {
           <button className="btn btn-danger" onClick={handleCancelRequest} aria-label="Cancelar petición">
             ✖ Cancelar Solicitud API
           </button>
-          <button className="btn btn-success" onClick={ModeAdd} aria-label="Cancelar petición">
+          <button className="btn btn-success" onClick={ModeAdd} aria-label="Agregar registro">
             + Agregar registro
           </button>
         </div>
@@ -262,7 +262,6 @@ const Alumnos = () => {
                     </>
                   )}
                 </tr>
-
               ))}
 
               {createAlumno && (

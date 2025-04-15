@@ -61,7 +61,7 @@ const Cursos = () => {
                                         </button>
                                     </td>
                                     <td>
-                                        <button className="btn btn-info btn-sm" ><i class="bi bi-card-heading"></i></button>
+                                        <button className="btn btn-info btn-sm" ><i className="bi bi-card-heading"></i></button>
                                     </td>
                                 </tr>
                             ))}

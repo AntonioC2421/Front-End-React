@@ -57,7 +57,7 @@ const DataDetail = () => {
             <div className="BodyDetail col-lg-8 col-md-12 col-sm-12">
                 {categoria && (
                     <div className="ItemDateList categoriaCard">
-                        <i class="bi bi-tag"></i>
+                        <i className="bi bi-tag"></i>
                         <p> <strong>Clasificación:</strong> {categoria.toUpperCase()}</p>
                     </div>
                 )}
