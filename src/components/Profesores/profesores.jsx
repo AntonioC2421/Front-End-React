@@ -14,20 +14,19 @@ const Profesores = () => {
 
   const [profesores, setProfesores] = useState([]);
 
-  //mensajes
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  //ADD
+  
   const [createProfesor, setcreateProfesor] = useState(false);
   const [createData, setcreateData] = useState({});
 
-  //UPDATE
+  
   const [editId, setEditId] = useState(null);
   const [editeData, setEditeData] = useState({});
   const { updateData } = useFetchChange();
 
-  //Detalle
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const Profesores = () => {
     }
   }, [data]);
 
-  //ADD
+  
   const ModeAdd = () => {
     setcreateProfesor(true);
   };
@@ -66,12 +65,9 @@ const Profesores = () => {
     }
   };
 
-  //UPDATE
   const DataChange = (id) => {
     setEditId(id);
-
     const profesorSeleccionado = profesores.find(profe => profe.id === id);
-
     setEditeData({ ...profesorSeleccionado });
   };
 
@@ -81,22 +77,18 @@ const Profesores = () => {
 
   const saveChanges = () => {
     const requiredFields = ['name', 'last_name', 'email'];
-
     const isEmpty = requiredFields.some(field => !editeData[field] || editeData[field].trim() === "");
 
     if (isEmpty) {
       setErrorMessage("Todos los campos son obligatorios");
-
       setTimeout(() => {
         setErrorMessage("");
 
       }, 1500);
-
       return;
     }
 
     const url = `http://localhost:5000/api/escuela/profesores/update/${editId}`;
-
     const { messageError, data, success } = ValidateData(editeData, categoria);
 
     if (success) {
@@ -122,19 +114,16 @@ const Profesores = () => {
       });
     } else {
       setErrorMessage(messageError);
-
       setTimeout(() => {
         setMessage("")
       }, 1500);
     }
   }
 
-  //Read 
   const Detail = (categoria, id) => {
     navigate(`/detail/${categoria}/${id}`);
   };
 
-  //DELETE
   const DataDelete = (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este registro?");
 
@@ -143,16 +132,13 @@ const Profesores = () => {
 
       DeleteRegister(url, () => {
         setProfesores((prevProfesores) => prevProfesores.filter(profe => profe.id !== id));
-
         setMessage("Profesor eliminado exitosamente");
-
         setTimeout(() => {
           setMessage("");
         }, 1500);
       }, () => {
 
-        setErrorMessage("Error en aliminación");
-
+        setErrorMessage("Error en eliminación");
         setTimeout(() => {
           setErrorMessage("");
         }, 1500);
@@ -263,10 +249,8 @@ const Profesores = () => {
                   )}
                 </tr>
               ))}
-
               {createProfesor && (
                 <tr>
-
                   <td>
                     <input
                       className="form-control"
@@ -276,7 +260,6 @@ const Profesores = () => {
                       onChange={(e) => setcreateData({ ...createData, id: e.target.value })}
                     />
                   </td>
-
                   <td>
                     <input
                       className="form-control"
@@ -286,7 +269,6 @@ const Profesores = () => {
                       onChange={(e) => setcreateData({ ...createData, name: e.target.value })}
                     />
                   </td>
-
                   <td>
                     <input
                       className="form-control"
@@ -296,7 +278,6 @@ const Profesores = () => {
                       onChange={(e) => setcreateData({ ...createData, last_name: e.target.value })}
                     />
                   </td>
-
                   <td>
                     <input
                       className="form-control"
@@ -306,7 +287,6 @@ const Profesores = () => {
                       onChange={(e) => setcreateData({ ...createData, email: e.target.value })}
                     />
                   </td>
-
                   <td colSpan="3">
                     <div className="IcoChange">
                       <button onClick={() => handleFetchAdd()} className="btn btn-success btn-sm mx-2">
@@ -320,27 +300,23 @@ const Profesores = () => {
                       </button>
                     </div>
                   </td>
-
                 </tr>
               )}
             </tbody>
           </table>
         </div>
       )}
-
       {message && (
         <div className="alert alert-info d-flex">
           <i className="bi bi-check2-circle px-2"></i>{message}
         </div>
       )}
-
       {errorMessage && (
         <div className="alert alert-danger d-flex">
           <i className="bi bi-dash-circle px-2"></i>
           {errorMessage}
         </div>
       )}
-
       {!loading && !error && profesores?.length === 0 && (
         <p className="alert alert-warning">⚠ No hay alumnos registrados.</p>
       )}

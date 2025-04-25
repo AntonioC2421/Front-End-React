@@ -46,7 +46,6 @@ const Alumnos = () => {
     if (success) {
       const url = `http://localhost:5000/api/escuela/alumnos/add`;
       FetchAdd(url, data, (newAlumno) => {
-
         setAlumnos((prevAlumnos) => [...prevAlumnos, newAlumno]);  // Agregar los nuevos datos para mostrarlos
         setcreateAlumno(false);  // Salir del modo ADD
         setcreateData({});  // Resetear los datos en los inputs
@@ -55,7 +54,6 @@ const Alumnos = () => {
         setTimeout(() => {
           setMessage("");
         }, 1500);
-
       });
     } else {
       setErrorMessage(messageError);
@@ -75,7 +73,6 @@ const Alumnos = () => {
       DeleteRegister(url, () => {
         setAlumnos((prevAlumnos) => prevAlumnos.filter(alum => alum.id !== id)); //filtar para no volver a mostar el id eliminado
         setMessage("Alumno eliminado exitosamente");
-
         setTimeout(() => {
           setMessage("");
         }, 1500);
@@ -100,7 +97,6 @@ const Alumnos = () => {
   };
 
   const saveChanges = () => { //guardar los cambios
-
     // Campos a validar
     const requiredFields = ['name', 'last_name', 'email'];
 
@@ -111,14 +107,12 @@ const Alumnos = () => {
       setErrorMessage("Por favor, rellene todos los campos.");
 
       setTimeout(() => {
-        setErrorMessage(""); // Ocultar mensaje después de 1.5 segundos
+        setErrorMessage("");
       }, 1500);
       return; // No continuar con la actualización
     }
 
     const url = `http://localhost:5000/api/escuela/alumnos/update/${editId}`;
-
-
     const { messageError, data, success } = ValidateData(editedData, categoria);
 
     if (success) {
@@ -133,24 +127,18 @@ const Alumnos = () => {
             alumno.id === editId ? { ...alumno, ...updatedAlumno } : alumno
           )
         );
-
         setEditId(null);
         setMessage("Alumno editado exitosamente");
-
         setTimeout(() => {
           setMessage("");
         }, 1500);
-
       });
-
     } else {
       setErrorMessage(messageError);
-
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
     }
-
   };
 
   //Read 
@@ -263,7 +251,6 @@ const Alumnos = () => {
                   )}
                 </tr>
               ))}
-
               {createAlumno && (
                 <tr>
                   <td>
@@ -321,7 +308,6 @@ const Alumnos = () => {
           </table>
         </div>
       )}
-      {/* Mensajes de éxito o error */}
       {message && (
         <div className="alert alert-info d-flex">
           <i className="bi bi-check2-circle px-2"></i>{message}

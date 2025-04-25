@@ -21,7 +21,6 @@ export function ValidateData(data, categoria) {
 
     switch (categoria) {
         case "alumnos":
-            // ID
             if (isNaN(ValidateId)) {
                 messageError = "ID debe ser un número entero";
             } else if (!Number.isInteger(ValidateId)) {
@@ -32,21 +31,18 @@ export function ValidateData(data, categoria) {
                 IdValid = true;
             }
 
-            // Nombre
             if (ValidateName.length >= 3 && ValidateName.length <= 10) {
                 NameValid = true;
             } else {
                 messageError = "El Nombre debe tener entre 3 y 10 caracteres.";
             }
 
-            // Apellido
             if (ValidateLastName.length >= 4 && ValidateLastName.length <= 13) {
                 LastNameValid = true;
             } else {
                 messageError = "El Apellido debe tener entre 4 y 13 caracteres.";
             }
 
-            // Email
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (emailRegex.test(ValidateEmail)) {
                 EmailValid = true;
@@ -113,7 +109,30 @@ export function ValidateData(data, categoria) {
             } else {
                 return { success: false, messageError };
             }
+        case "cursos":
+            if (isNaN(ValidateId) || !Number.isInteger(ValidateId) || ValidateId <= 0) {
+                messageError = "ID debe ser un número entero mayor que 0";
+            } else {
+                IdValid = true;
+            }
 
+            if (ValidateName.length >= 3 && ValidateName.length <= 10) {
+                NameValid = true;
+            } else {
+                messageError = "El Nombre debe tener entre 3 y 10 caracteres.";
+            }
+
+            if (isNaN(ValidateProfesorId) || !Number.isInteger(ValidateProfesorId) || ValidateProfesorId <= 0) {
+                messageError = "ID del profesor debe ser un número entero mayor que 0";
+            } else {
+                ProfesorIdValid = true;
+            }
+
+            if (IdValid && NameValid && ProfesorIdValid) {
+                return { success: true, data };
+            } else {
+                return { success: false, messageError };
+            }
         default:
             return { success: false, messageError: "Categoría no existe" };
     }

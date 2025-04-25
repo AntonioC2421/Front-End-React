@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useFecth } from "../../useFetch/useFetch"; //obtener datos adicionales
-import { useFetchDetail } from "../../useFetch/useFetchDetail"; // Solicitud Api detalles
+import { useFecth } from "../../useFetch/useFetch";
+import { useFetchDetail } from "../../useFetch/useFetchDetail";
 import login from "../../assets/imagenes/imgLogin.webp";
 import school from "../../assets/imagenes/InsigniaColegio.webp";
 import "./DetailRegister.css";
@@ -35,7 +35,7 @@ const DataDetail = () => {
     const { data: alumnos } = useFecth("http://localhost:5000/api/escuela/alumnos");
 
     if (error) return <p className="alert alert-danger">❌ Error: {error}</p>;
-    if (!data) return <p className="alert alert-info">⏳ Cargando...</p>; // Muestra un mensaje mientras se cargan los datos
+    if (!data) return <p className="alert alert-info">⏳ Cargando...</p>;
 
     return (
         <div className="container-fluid row g-0 ContentDetail">
@@ -61,35 +61,30 @@ const DataDetail = () => {
                         <p> <strong>Clasificación:</strong> {categoria.toUpperCase()}</p>
                     </div>
                 )}
-
                 {data.id && (
                     <div className="ItemDateList idCard">
                         <i className="bi bi-person-vcard"></i>
                         <p><strong>Código: </strong>{data.id}</p>
                     </div>
                 )}
-
                 {data.email && (
                     <div className="ItemDateList emailCard">
                         <i className="bi bi-envelope"></i>
                         <p><strong>Correo: </strong> {data.email}</p>
                     </div>
                 )}
-
                 {data.id_profesor && (
                     <div className="ItemDateList IdProfesorCard">
                         <i className="bi bi-person-badge"></i>
                         <p><strong>Profesor: </strong> {profesores?.find(profe => profe.id === data.id_profesor)?.name} {profesores?.find(profe => profe.id === data.id_profesor)?.last_name || "Desconocido"}</p>
                     </div>
                 )}
-
                 {data.curso_id && (
                     <div className="ItemDateList idCursoCard">
                         <i className="bi bi-book"></i>
                         <p><strong>Materia:</strong> {cursos?.find(curso => curso.id == data.curso_id)?.name || "Desconocido"}</p>
                     </div>
                 )}
-
                 {data.alumno_id && (
                     <div className="ItemDateList idAlumoCard">
                         <i className="bi bi-person"></i>
@@ -97,7 +92,6 @@ const DataDetail = () => {
                     </div>
                 )}
             </div>
-
         </div>
     );
 };

@@ -1,10 +1,3 @@
-/*
-MEJORAS:
-1) mostrar mensaje cuando los inputs esten vacios
-2) Validar el tipo de valor que se envia
-3) Si no se guarda, mandar mensaje de erro visible para el cliente
-*/
-
 export function FetchAdd(url, data, onSuccess, onError) {
     fetch(url, {
         method: "POST",
@@ -27,4 +20,3 @@ export function FetchAdd(url, data, onSuccess, onError) {
             if (onError) onError("Error de red o el servidor no está disponible.");
         });
 }
-
